@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pool Party - Invitación</title>
+    <title>THE SUMMER NIGHT - Invitación</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Anton&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
@@ -65,8 +65,7 @@
             max-width: 400px;
             height: 85vh;
             max-height: 800px;
-            background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80') no-repeat center center;
-            background-size: cover;
+            background-color: #000; 
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
             overflow: hidden;
@@ -77,6 +76,17 @@
             justify-content: space-between;
         }
 
+        /* Estilos para el video de fondo */
+        .bg-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            z-index: 0;
+        }
+
         .overlay {
             position: absolute;
             top: 0;
@@ -84,14 +94,14 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(to bottom, rgba(0,0,50,0.4), transparent, rgba(0,0,50,0.6));
-            z-index: 1;
+            z-index: 1; 
         }
 
         .content {
             position: relative;
-            z-index: 10;
+            z-index: 10; 
             padding: 20px;
-            padding-top: 60px;
+            padding-top: 15px; 
             display: flex;
             flex-direction: column;
             height: 100%;
@@ -123,7 +133,7 @@
         }
 
         .info-details {
-            margin-top: 30px;
+            margin-top: 15px;
             font-size: 1.3rem;
             text-transform: uppercase;
             font-weight: 700;
@@ -224,13 +234,13 @@
             bottom: 10px;
             right: 15px;
             font-size: 0.6rem;
-            color: rgba(255, 255, 255, 0.8); /* Blanco casi puro para que se vea */
+            color: rgba(255, 255, 255, 0.8);
             font-family: 'Outfit', sans-serif;
-            z-index: 100; /* Aseguramos que esté encima de todo */
+            z-index: 100;
             letter-spacing: 1px;
             text-transform: uppercase;
             font-weight: 400;
-            text-shadow: 1px 1px 2px rgba(0,0,0,1); /* Sombra negra para contraste */
+            text-shadow: 1px 1px 2px rgba(0,0,0,1);
             pointer-events: none;
         }
     </style>
@@ -250,14 +260,19 @@
     </audio>
 
     <div class="flyer-container">
+        
+        <video class="bg-video" autoplay loop muted playsinline>
+            <source src="fondo.mp4" type="video/mp4">
+        </video>
+
         <div class="overlay"></div>
 
         <div class="content">
-            <h2 class="subtitle">El clásico del verano</h2>
-            <h1 class="main-title">POOL<br>PARTY</h1>
+            <h2 class="subtitle">Indoor Session</h2>
+            <h1 class="main-title">THE SUMMER<br>NIGHT</h1>
 
             <div class="info-details">
-                <p>UBICACIÓN A CONFIRMAR</p>
+                <p>UBICACIÓN PRIVADA</p>
                 <p><span class="highlight-pink">SÁBADO 13 DIC</span> • 23:59 HS</p>
             </div>
             
@@ -322,4 +337,5 @@
     </script>
 
 </body>
+
 </html>
