@@ -29,7 +29,12 @@
                     },
                     boxShadow: {
                         'neon': '0 0 20px rgba(255, 0, 222, 0.3)',
+                        'neon-blue': '0 0 20px rgba(0, 255, 255, 0.3)',
+                        'neon-green': '0 0 20px rgba(74, 222, 128, 0.3)',
                         'neon-hover': '0 0 30px rgba(255, 0, 222, 0.5)',
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     }
                 }
             }
@@ -67,11 +72,19 @@
             transform: translateY(20px);
         }
 
+        /* Animación para la aparición del botón final */
+        .pop-in {
+            animation: popIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transform: scale(0.9);
+            opacity: 0;
+        }
+
         @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes popIn {
+            to { opacity: 1; transform: scale(1); }
         }
 
         /* Selección de texto personalizada */
@@ -153,21 +166,52 @@
                     </button>
                 </div>
 
-                <!-- Botón de WhatsApp (CTA Principal) -->
-                <a href="https://wa.me/5493794816696?text=Hola!%20Ya%20hice%20el%20pago%20de%20la%20entrada%20para%20THE%20SUMMER%20NIGHT.%20Adjunto%20el%20comprobante." 
-                   target="_blank"
-                   class="w-full bg-gradient-to-r from-pink-600 to-purple-700 hover:from-pink-500 hover:to-purple-600 text-white p-4 rounded-full font-bold uppercase tracking-widest text-sm shadow-neon hover:shadow-neon-hover transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 group relative overflow-hidden">
+                <!-- ================= ZONA DE ACCIÓN DINÁMICA ================= -->
+                <div id="action-container" class="w-full h-[60px] relative flex items-center justify-center">
                     
-                    <!-- Brillo animado sobre el botón -->
-                    <div class="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent transform group-hover:translate-x-[200%] transition-transform duration-700 ease-in-out"></div>
-                    
-                    <span>Enviar Comprobante</span>
-                    <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                    </svg>
-                </a>
+                    <!-- 1. Botón Inicial: Verificar Pago -->
+                    <button id="btn-verify" onclick="startVerification()" 
+                            class="absolute w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white p-4 rounded-full font-bold uppercase tracking-widest text-sm shadow-neon-blue transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 z-20">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 animate-pulse-fast" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Verificar pago realizado</span>
+                    </button>
+
+                    <!-- 2. Barra de Progreso (Oculta inicialmente) -->
+                    <div id="progress-container" class="absolute w-full flex flex-col items-center justify-center hidden z-10">
+                        <p class="text-xs text-cyan-400 uppercase tracking-widest mb-2 animate-pulse">Verificando transacción...</p>
+                        <div class="w-full h-3 bg-neutral-900/50 rounded-full overflow-hidden border border-white/10">
+                            <!-- Barra de 5000ms (5 segundos) -->
+                            <div id="progress-bar" class="h-full w-0 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 rounded-full transition-all duration-[5000ms] ease-out"></div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Mensaje de Éxito Intermedio (NUEVO) -->
+                    <div id="success-msg" class="absolute w-full flex items-center justify-center hidden z-20">
+                        <div class="flex items-center gap-3 px-6 py-3 bg-green-500/10 border border-green-500/30 rounded-full shadow-neon-green backdrop-blur-md animate-pulse">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-green-400 font-bold uppercase tracking-widest text-sm">¡Pago Verificado!</span>
+                        </div>
+                    </div>
+
+                    <!-- 4. Botón Final: WhatsApp (Oculto inicialmente) -->
+                    <a id="btn-whatsapp" href="https://wa.me/5493794816696?text=Hola!%20Ya%20hice%20el%20pago%20de%20la%20entrada%20para%20THE%20SUMMER%20NIGHT.%20Adjunto%20el%20comprobante." 
+                       target="_blank"
+                       class="absolute hidden w-full bg-gradient-to-r from-pink-600 to-purple-700 hover:from-pink-500 hover:to-purple-600 text-white p-4 rounded-full font-bold uppercase tracking-widest text-sm shadow-neon hover:shadow-neon-hover transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 group relative overflow-hidden z-20">
+                        <!-- Brillo animado sobre el botón -->
+                        <div class="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent transform group-hover:translate-x-[200%] transition-transform duration-700 ease-in-out"></div>
+                        <span>Enviar Comprobante</span>
+                        <svg class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    </a>
+                </div>
+                <!-- ================= FIN ZONA DINÁMICA ================= -->
                 
-                <p class="mt-4 text-[10px] text-gray-500">Recibirás tu QR de acceso tras enviar el comprobante.</p>
+                <p id="footer-text" class="mt-4 text-[10px] text-gray-500 transition-all duration-300">
+                    Confirma tu pago para continuar.
+                </p>
 
             </div>
         </div>
@@ -180,72 +224,87 @@
     </main>
 
     <script>
+        // --- Función para manejar la animación de verificación ---
+        function startVerification() {
+            const btnVerify = document.getElementById('btn-verify');
+            const progressContainer = document.getElementById('progress-container');
+            const progressBar = document.getElementById('progress-bar');
+            const successMsg = document.getElementById('success-msg');
+            const btnWhatsapp = document.getElementById('btn-whatsapp');
+            const footerText = document.getElementById('footer-text');
+
+            // 1. Ocultar botón de verificar y mostrar barra
+            btnVerify.classList.add('hidden');
+            progressContainer.classList.remove('hidden');
+            footerText.innerText = "Validando transacción con el banco...";
+
+            // 2. Iniciar la animación (5 segundos)
+            setTimeout(() => {
+                progressBar.classList.remove('w-0');
+                progressBar.classList.add('w-full');
+            }, 50);
+
+            // 3. Al terminar la barra (5100ms), mostrar mensaje de éxito
+            setTimeout(() => {
+                progressContainer.classList.add('hidden');
+                successMsg.classList.remove('hidden');
+                successMsg.classList.add('pop-in');
+                footerText.innerText = "Transacción exitosa.";
+            }, 5100); 
+
+            // 4. Esperar 2 segundos viendo el mensaje de éxito y mostrar botón final
+            setTimeout(() => {
+                successMsg.classList.add('hidden');
+                btnWhatsapp.classList.remove('hidden');
+                btnWhatsapp.classList.add('pop-in');
+                footerText.innerText = "¡Listo! Envía el comprobante para recibir tu QR.";
+            }, 7500); // 5.1s + 2.4s aprox
+        }
+
+        // --- Función original para copiar el Alias ---
         function copiarAlias() {
             const aliasText = document.getElementById('alias-value').innerText;
             const btn = document.getElementById('btn-copy');
             const btnText = document.getElementById('text-copy');
             const icon = document.getElementById('icon-copy');
 
-            // Función interna para actualizar la UI
             const updateUI = () => {
-                // Guardar estado original si es necesario (opcional)
-                
-                // Cambiar estilos a "Éxito"
                 btn.classList.remove('border-white/20', 'hover:bg-white/10');
                 btn.classList.add('bg-green-500/10', 'border-green-500/50');
-                
-                // Cambiar texto e icono
                 btnText.innerText = "¡Alias Copiado!";
                 btnText.classList.remove('text-gray-200');
                 btnText.classList.add('text-green-400');
-                
                 icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>';
                 icon.classList.remove('text-gray-300');
                 icon.classList.add('text-green-400');
 
-                // Revertir después de 2 segundos
                 setTimeout(() => {
                     btn.classList.add('border-white/20', 'hover:bg-white/10');
                     btn.classList.remove('bg-green-500/10', 'border-green-500/50');
-                    
                     btnText.innerText = "Copiar Alias";
                     btnText.classList.add('text-gray-200');
                     btnText.classList.remove('text-green-400');
-
                     icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>';
                     icon.classList.add('text-gray-300');
                     icon.classList.remove('text-green-400');
                 }, 2000);
             };
 
-            // Solución para compatibilidad con iframes y permisos estrictos:
-            // Usamos un elemento textarea temporal y execCommand, que suele funcionar
-            // mejor en entornos donde la API asíncrona de portapapeles está bloqueada.
-            
             const textArea = document.createElement("textarea");
             textArea.value = aliasText;
-            
-            // Asegurar que el elemento no sea visible en la pantalla
             textArea.style.position = "fixed";
             textArea.style.left = "-9999px";
             textArea.style.top = "0";
-            textArea.setAttribute("readonly", ""); // Evitar teclado en móviles
+            textArea.setAttribute("readonly", "");
             document.body.appendChild(textArea);
-            
             textArea.focus();
             textArea.select();
             
             try {
                 const successful = document.execCommand('copy');
-                if (successful) {
-                    updateUI();
-                } else {
-                    throw new Error('Comando de copia fallido');
-                }
+                if (successful) updateUI();
             } catch (err) {
-                console.warn('Falló la copia estándar, intentando método alternativo...', err);
-                // Último recurso: intentar prompt o alert
-                alert('Por favor copia el alias manualmente: ' + aliasText);
+                alert('Copia manualmente: ' + aliasText);
             } finally {
                 document.body.removeChild(textArea);
             }
